@@ -52,5 +52,5 @@ docs/
 Thumbs.db
 
 # Misc
-test.ipynb
+*.ipynb
 *.ipynb_checkpoints
