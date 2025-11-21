@@ -1,0 +1,62 @@
+services:
+  # FastAPI Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: repairium-rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # - LLMWARE_PATH=/app/llmware_data
+      # - CHROMADB_PERSIST_PATH=/app/chromadb_data
+      # - CHROMADB_HOST=chromadb
+      # - CHROMADB_PORT=8001
+    # Mount a single root app volume. llmware and chromadb data will live under
+    # the container's default paths inside /app (e.g. /app/llmware_data,
+    # /app/chromadb_data) and be persisted in the named volume below.
+    volumes:
+      # 1. Code Mount (Live Updates): Maps current host directory to /app
+      - .:/app
+      
+      # 2. Data Persistence Mount:
+      # Host: ./llmware_data (Creates/uses a folder next to docker-compose.yml)
+      # Container: /root/llmware_data (The fixed path the app requires)
+      - ./llmware_data:/root/llmware_data
+
+    # depends_on:
+    #   chromadb:
+    #     condition: service_healthy
+    networks:
+      - repairium-network
+    restart: unless-stopped
+
+  # ChromaDB Vector Database
+  # chromadb:
+  #   image: chromadb/chroma:latest
+  #   container_name: chromadb
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - ./chromadb_data:/chroma/chroma
+  #   environment:
+  #     - IS_PERSISTENT=TRUE
+  #     - PERSIST_DIRECTORY=/chroma/chroma
+  #     - ANONYMIZED_TELEMETRY=FALSE
+  #   networks:
+  #     - llmware-network
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
+
+volumes:
+  app_data:
+    driver: local
+
+networks:
+    repairium-network:
+      driver: bridge

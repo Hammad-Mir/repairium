@@ -1,0 +1,43 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Data directories (handled by volumes)
+llmware_data/
+chromadb_data/
+*.db
+*.sqlite
+docs/
+
+# Documentation
+*.md
+!README.md
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov/
+.tox/
